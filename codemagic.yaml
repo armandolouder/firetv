@@ -1,0 +1,27 @@
+workflows:
+  android-workflow:
+    name: Android Fire TV Build
+    max_build_duration: 30
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      java: 17
+    scripts:
+      - name: Set up local.properties
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+      - name: Get Flutter packages
+        script: |
+          flutter pub get
+      - name: Configure Gradle permissions
+        script: |
+          chmod +x android/gradlew
+      - name: Build APK for Fire TV
+        script: |
+          flutter build apk --debug --verbose
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+    publishing:
+      email:
+        recipients:
+          - seu-email@exemplo.com
